@@ -1,10 +1,12 @@
 import { EyeFilled, ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Image } from 'antd'
+import { Button, Image, Pagination } from 'antd'
+import { useState } from 'react'
 import Loader from '../components/loading'
 import { useProductsGetQuery } from '../services/api'
 
 const Allproducts = () => {
-	const { data, isLoading } = useProductsGetQuery()
+	const [current, setCurrent] = useState(1)
+	const { data, isLoading } = useProductsGetQuery(current)
 	if (isLoading) {
 		return (
 			<div className='w-full h-screen flex justify-between items-center'>
@@ -12,9 +14,17 @@ const Allproducts = () => {
 			</div>
 		)
 	}
-	console.log(data.results)
+
+	const limit = data?.count + 10
+
+	const onChange = page => {
+		setCurrent(page)
+	}
+
+	console.log(limit)
+
 	return (
-		<div className='w-full  mx-auto h-auto py-10 px-5 pb-10'>
+		<div className='w-full  mx-auto h-auto py-10 px-5 pb-30'>
 			<h1 className='text-3xl text-center font-bold  text-blue-500'>
 				Barcha maxsulotlar
 			</h1>
@@ -110,6 +120,9 @@ const Allproducts = () => {
 						</div>
 					)
 				})}
+			</div>
+			<div className='text-center'>
+				<Pagination current={current} onChange={onChange} total={limit} />
 			</div>
 		</div>
 	)

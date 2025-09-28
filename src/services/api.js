@@ -3,12 +3,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const api = createApi({
 	reducerPath: 'api',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'https://api.toysmars.uz/shop',
+		baseUrl: 'https://api.toysmars.uz',
 	}),
 	tagTypes: ['Posts', 'Post'],
 	endpoints: builder => ({
 		NewProductsGet: builder.query({
-			query: () => '/new-products/',
+			query: () => '/shop/new-products/',
 		}),
 		addPost: builder.mutation({
 			query: newPost => ({
@@ -26,12 +26,20 @@ export const api = createApi({
 			invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
 		}),
 		ProductsGet: builder.query({
-			query: () => '/products/',
+			query: page => `/shop/products/?page=${page}`,
+		}),
+		addLogin: builder.mutation({
+			query: fullPhone => ({
+				url: '/users/register/',
+				method: 'POST',
+				body: { phone_number: fullPhone },
+			}),
 		}),
 	}),
 })
 
 export const {
+	useAddLoginMutation,
 	useProductsGetQuery,
 	useGetPostsQuery,
 	useAddPostMutation,

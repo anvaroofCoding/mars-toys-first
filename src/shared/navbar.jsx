@@ -3,7 +3,9 @@ import { Link, useLocation } from 'react-router-dom'
 
 const Navbar = () => {
 	const params = useLocation()
-	console.log(params.pathname)
+
+	// Masalan, buyurtmalar soni:
+	const orderCount = 3
 
 	const data = [
 		{
@@ -13,13 +15,14 @@ const Navbar = () => {
 		},
 		{
 			name: 'Maxsulotlar',
-			icon: <ShoppingCart className='w-6 h-6' />,
+			icon: <ListOrdered className='w-6 h-6' />,
 			link: '/barcha-maxsulotlar',
 		},
 		{
 			name: 'Buyurtmalar',
-			icon: <ListOrdered className='w-6 h-6' />,
+			icon: <ShoppingCart className='w-6 h-6' />,
 			link: '/buyurtmalar',
+			badge: orderCount,
 		},
 		{
 			name: 'Sozlamalar',
@@ -40,11 +43,20 @@ const Navbar = () => {
 					<Link
 						key={item.name}
 						to={item.link}
-						className={`flex flex-col items-center text-[15px] transition ${
+						className={`relative flex flex-col items-center text-[15px] transition ${
 							params.pathname === item.link ? 'text-blue-300' : 'text-white'
 						}`}
 					>
-						{item.icon}
+						{/* Icon qismi */}
+						<div className='relative'>
+							{item.icon}
+							{item.badge && (
+								<span className='absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full'>
+									{item.badge}
+								</span>
+							)}
+						</div>
+						{/* Matn qismi */}
 						<span
 							className={`text-[10px] mt-1 ${
 								params.pathname === item.link ? 'text-blue-300' : 'text-white'

@@ -7,6 +7,7 @@ import { store } from './app/store'
 import Header from './components/header'
 import './index.css'
 import Allproducts from './pages/allproducts'
+import Login from './pages/login'
 import Order from './pages/order'
 
 createRoot(document.getElementById('root')).render(
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(
 						<Route path='/' element={<Header />} />
 						<Route path='/barcha-maxsulotlar' element={<Allproducts />} />
 						<Route path='/buyurtmalar' element={<Order />} />
+						<Route path='/shaxsiy-kabinet' element={<Login />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>
