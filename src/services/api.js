@@ -25,10 +25,14 @@ export const api = createApi({
 			}),
 			invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
 		}),
+		ProductsGet: builder.query({
+			query: () => '/products/',
+		}),
 	}),
 })
 
 export const {
+	useProductsGetQuery,
 	useGetPostsQuery,
 	useAddPostMutation,
 	useDeletePostMutation,

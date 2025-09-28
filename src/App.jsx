@@ -1,6 +1,5 @@
 import { Loader } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
-import Header from './components/header'
 import { useNewProductsGetQuery } from './services/api'
 import Navbar from './shared/navbar'
 
@@ -21,7 +20,6 @@ const App = () => {
 					<Navbar />
 				</div>
 				<Outlet />
-				<Header />
 			</div>
 		</div>
 	)

@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import App from './App'
 import { store } from './app/store'
+import Header from './components/header'
 import './index.css'
 import Allproducts from './pages/allproducts'
 import Order from './pages/order'
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')).render(
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<App />}>
+						<Route path='/' element={<Header />} />
 						<Route path='/barcha-maxsulotlar' element={<Allproducts />} />
 						<Route path='/buyurtmalar' element={<Order />} />
 					</Route>

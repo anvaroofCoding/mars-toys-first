@@ -1,4 +1,8 @@
-import { ShoppingCartOutlined } from '@ant-design/icons'
+import {
+	ArrowRightOutlined,
+	EyeFilled,
+	ShoppingCartOutlined,
+} from '@ant-design/icons'
 import { Button, Image } from 'antd'
 import { useNewProductsGetQuery } from '../services/api'
 import Loader from './loading'
@@ -14,8 +18,8 @@ const NewProducts = () => {
 	}
 	console.log(data)
 	return (
-		<div className='w-full  mx-auto h-auto py-10 px-5'>
-			<h1 className='text-3xl text-center font-bold text-black/70 text-blue-500'>
+		<div className='w-full  mx-auto h-auto py-10 px-5 pb-25'>
+			<h1 className='text-3xl text-center font-bold  text-blue-500'>
 				Yangi maxsulotlar
 			</h1>
 			<p className='text-center mt-3 text-black/70'>
@@ -66,18 +70,56 @@ const NewProducts = () => {
 								<p className='text-gray-400 font-bold text-[10px] md:text-xs'>
 									{item?.quantity} dona qoldi
 								</p>
-								<Button
-									type='primary'
-									icon={<ShoppingCartOutlined />}
-									className='w-full'
-									size={window.innerWidth >= 768 ? 'large' : 'small'} // md breakpoint = 768px
-								>
-									Savatga qo'shish
-								</Button>
+								<div className='w-full justify-center md:flex-row flex-col gap-2 items-center md:flex hidden'>
+									<Button
+										type='primary'
+										icon={<ShoppingCartOutlined />}
+										className='w-full'
+										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+									>
+										Savatga qo'shish
+									</Button>
+									<Button
+										variant='solid'
+										color='volcano'
+										icon={<EyeFilled />}
+										className='w-full'
+										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+									>
+										Ko'rish
+									</Button>
+								</div>
+								<div className='w-full flex justify-end gap-2 items-center md:hidden'>
+									<Button
+										type='primary'
+										icon={<ShoppingCartOutlined />}
+										className='w-full'
+										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+									>
+										Savatga
+									</Button>
+									<Button
+										variant='solid'
+										color='volcano'
+										icon={<EyeFilled />}
+										className='w-full '
+										style={{
+											padding:
+												window.innerWidth >= 768 ? '0px 0px' : '0px 10px',
+										}}
+										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+									></Button>
+								</div>
 							</div>
 						</div>
 					)
 				})}
+			</div>
+			<div className='text-center'>
+				<Button variant='solid' color='blue'>
+					Barcha maxsulotlar
+					<ArrowRightOutlined style={{ marginLeft: 8 }} />
+				</Button>
 			</div>
 		</div>
 	)

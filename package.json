@@ -19,6 +19,7 @@
     "lucide-react": "^0.544.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-input-mask": "^2.0.4",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.3",
     "styled-components": "^6.1.19",
