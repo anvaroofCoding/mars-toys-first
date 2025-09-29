@@ -1,6 +1,7 @@
 import { SendOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useEffect, useRef, useState } from 'react'
+import { toast, Toaster } from 'sonner'
 import Cards from '../components/profile'
 
 const Login = () => {
@@ -134,6 +135,7 @@ const Login = () => {
 			})
 
 			if (!res.ok) throw new Error(`Login failed: ${res.status}`)
+			toast.success('Parol orqali muavaffaqiyatli kirildi!')
 
 			const dataRes = await res.json()
 			const access = dataRes.access_token
@@ -143,10 +145,10 @@ const Login = () => {
 			localStorage.setItem('refresh_token', refresh)
 			localStorage.setItem('phone', loginDatas.phone_number)
 
-			window.location.href = '/'
+			window.location.pathname = '/'
 		} catch (error) {
 			console.error('Login error:', error)
-			alert('Login xatolik bilan yakunlandi. Kodni tekshiring.')
+			toast.warning('loginda xatolik iltimos kodingizni tekshiring!')
 		}
 	}
 
@@ -158,6 +160,8 @@ const Login = () => {
 		
 		`}
 		>
+			<Toaster position='top-center' />
+
 			<div
 				className={` justify-center flex-col items-center gap-2 ${
 					tokens ? 'hidden' : 'flex'
@@ -198,7 +202,7 @@ const Login = () => {
 						{/* Foydalanuvchi yozadigan qismi */}
 						<input
 							type='tel'
-							placeholder='(94)-793-20-05'
+							placeholder='(90)-123-45-67'
 							value={formatPhone(rawPhone)}
 							onChange={handleChange}
 							onKeyDown={handleKeyDown}
