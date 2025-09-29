@@ -9,6 +9,7 @@ import './index.css'
 import Allproducts from './pages/allproducts'
 import Login from './pages/login'
 import Order from './pages/order'
+import ProductsDetail from './pages/productsDetail'
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
@@ -20,6 +21,10 @@ createRoot(document.getElementById('root')).render(
 						<Route path='/barcha-maxsulotlar' element={<Allproducts />} />
 						<Route path='/buyurtmalar' element={<Order />} />
 						<Route path='/shaxsiy-kabinet' element={<Login />} />
+						<Route
+							path='/maxsulotlar-kabinet/:id'
+							element={<ProductsDetail />}
+						/>
 					</Route>
 				</Routes>
 			</BrowserRouter>

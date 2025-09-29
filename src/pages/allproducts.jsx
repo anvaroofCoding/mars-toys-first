@@ -1,40 +1,88 @@
 import { EyeFilled, ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Image, Pagination } from 'antd'
-import { useState } from 'react'
+import { Button, Empty, Image, Input, Pagination, Select } from 'antd'
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Loader from '../components/loading'
-import { useProductsGetQuery } from '../services/api'
+import { useCategoriyesQuery, useProductsGetQuery } from '../services/api'
+
+const { Search } = Input
 
 const Allproducts = () => {
 	const [current, setCurrent] = useState(1)
+	const [category, setCategory] = useState('all')
+	const [searchText, setSearchText] = useState('')
+	const navigate = useNavigate()
+
+	// API dan ma'lumotlar
 	const { data, isLoading } = useProductsGetQuery(current)
-	if (isLoading) {
+	const { data: datas, isLoading: Loaders } = useCategoriyesQuery()
+	const categories = useMemo(() => {
+		if (!datas) return ['all']
+		const cats = datas?.map(item => item.name)
+		return ['all', ...new Set(cats)]
+	}, [datas])
+
+	// Filter va search qilingan mahsulotlar
+	const filteredProducts = useMemo(() => {
+		if (!data?.results) return []
+		return data?.results?.filter(item => {
+			const byCategory = category === 'all' ? true : item.category === category
+			const bySearch = item.name
+				.toLowerCase()
+				.includes(searchText.toLowerCase())
+			return byCategory && bySearch
+		})
+	}, [data, category, searchText])
+
+	if (isLoading || Loaders) {
 		return (
-			<div className='w-full h-screen flex justify-between items-center'>
+			<div className='w-full h-screen flex justify-center items-center'>
 				<Loader />
 			</div>
 		)
 	}
 
+	// Pagination uchun limit
 	const limit = data?.count + 10
 
 	const onChange = page => {
 		setCurrent(page)
 	}
 
-	console.log(limit)
+	// Barcha kategoriyalarni olish
 
 	return (
-		<div className='w-full  mx-auto h-auto py-10 px-5 pb-30'>
-			<h1 className='text-3xl text-center font-bold  text-blue-500'>
+		<div className='w-full mx-auto h-auto py-10 px-5 pb-30'>
+			<h1 className='text-3xl text-center font-bold text-blue-500'>
 				Barcha maxsulotlar
 			</h1>
 			<p className='text-center mt-3 text-black/70'>
 				Bizning dokonimizdagi eng sara va eng zamonaviy o'yinchoqlarimiz bilan
 				tanishing
 			</p>
+
+			{/* Filter va Search panel */}
+			<div className='flex flex-col md:flex-row gap-4 justify-between items-center mt-6'>
+				<Search
+					placeholder='Mahsulot qidirish...'
+					allowClear
+					onSearch={value => setSearchText(value)}
+					onChange={e => setSearchText(e.target.value)}
+					style={{ width: 300 }}
+					value={searchText}
+				/>
+				<Select
+					value={category}
+					style={{ width: 300 }}
+					onChange={value => setCategory(value)}
+					options={categories.map(cat => ({ label: cat, value: cat }))}
+				/>
+			</div>
+
+			{/* Mahsulotlar grid */}
 			<div className='grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-5 py-10'>
-				{data?.results?.map(item => {
-					return (
+				{filteredProducts?.length > 0 ? (
+					filteredProducts.map(item => (
 						<div
 							key={item?.id}
 							className='md:h-[500px] xl:h-[400px] h-[250px] rounded-lg flex flex-col items-center overflow-hidden shadow-lg shadow-gray-300'
@@ -109,6 +157,9 @@ const Allproducts = () => {
 										color='volcano'
 										icon={<EyeFilled />}
 										className='w-full '
+										onClick={() => {
+											navigate(`/maxsulotlar-kabinet/${item.id}`)
+										}}
 										style={{
 											padding:
 												window.innerWidth >= 768 ? '0px 0px' : '0px 10px',
@@ -118,9 +169,15 @@ const Allproducts = () => {
 								</div>
 							</div>
 						</div>
-					)
-				})}
+					))
+				) : (
+					<div className='w-full col-span-4 min-h-40 flex justify-center items-center'>
+						<Empty />
+					</div>
+				)}
 			</div>
+
+			{/* Pagination */}
 			<div className='text-center'>
 				<Pagination current={current} onChange={onChange} total={limit} />
 			</div>

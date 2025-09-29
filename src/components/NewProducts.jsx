@@ -4,10 +4,12 @@ import {
 	ShoppingCartOutlined,
 } from '@ant-design/icons'
 import { Button, Image } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { useNewProductsGetQuery } from '../services/api'
 import Loader from './loading'
 
 const NewProducts = () => {
+	const navigate = useNavigate()
 	const { data, isLoading } = useNewProductsGetQuery()
 	if (isLoading) {
 		return (
@@ -103,6 +105,9 @@ const NewProducts = () => {
 										color='volcano'
 										icon={<EyeFilled />}
 										className='w-full '
+										onClick={() => {
+											navigate(`/maxsulotlar-kabinet/${item.id}`)
+										}}
 										style={{
 											padding:
 												window.innerWidth >= 768 ? '0px 0px' : '0px 10px',

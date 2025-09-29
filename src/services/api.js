@@ -35,10 +35,18 @@ export const api = createApi({
 				body: { phone_number: fullPhone },
 			}),
 		}),
+		ProductsDetail: builder.query({
+			query: id => `/shop/product-details/?product_id=${id}`,
+		}),
+		Categoriyes: builder.query({
+			query: () => `/shop/categories`,
+		}),
 	}),
 })
 
 export const {
+	useCategoriyesQuery,
+	useProductsDetailQuery,
 	useAddLoginMutation,
 	useProductsGetQuery,
 	useGetPostsQuery,
