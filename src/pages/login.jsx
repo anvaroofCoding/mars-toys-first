@@ -1,6 +1,7 @@
 import { SendOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useEffect, useRef, useState } from 'react'
+import Cards from '../components/profile'
 
 const Login = () => {
 	const [rawPhone, setRawPhone] = useState('') // faqat raqamlar
@@ -93,21 +94,28 @@ const Login = () => {
 	}
 
 	const handleChanges = (e, index) => {
-		const val = e.target.value.replace(/\D/, '') // faqat raqam qabul qiladi
+		const val = e.target.value.replace(/\D/g, '') // faqat raqam qabul qiladi
 		const newValues = [...values]
-		newValues[index] = val
+		newValues[index] = val.slice(-1) // faqat oxirgi kiritilgan sonni olamiz
 		setValues(newValues)
 
-		// Agar raqam yozilsa keyingi inputga fokus beramiz
 		if (val && index < length - 1) {
+			// keyingi inputga o'tkazish
 			inputsRef.current[index + 1].focus()
 		}
 	}
 
 	const handleKeyDowns = (e, index) => {
-		// Backspace bosilganda oldingi inputga qaytadi
-		if (e.key === 'Backspace' && !values[index] && index > 0) {
-			inputsRef.current[index - 1].focus()
+		if (e.key === 'Backspace') {
+			if (values[index]) {
+				// shu inputni tozalaymiz
+				const newValues = [...values]
+				newValues[index] = ''
+				setValues(newValues)
+			} else if (index > 0) {
+				// agar bo‘sh bo‘lsa → oldingisiga o'tadi
+				inputsRef.current[index - 1].focus()
+			}
 		}
 	}
 
@@ -142,9 +150,19 @@ const Login = () => {
 		}
 	}
 
+	const tokens = localStorage.getItem('access_token')
+
 	return (
-		<div className='w-full h-screen flex justify-center items-center flex-col gap-2'>
-			<div className='flex justify-center flex-col items-center gap-2'>
+		<div
+			className={`w-full h-screen flex justify-center items-center flex-col gap-2
+		
+		`}
+		>
+			<div
+				className={` justify-center flex-col items-center gap-2 ${
+					tokens ? 'hidden' : 'flex'
+				}`}
+			>
 				<div className='relative z-10 flex flex-col items-center justify-center px-6 text-center'>
 					{/* Animated Title */}
 					<div>
@@ -225,6 +243,13 @@ const Login = () => {
 						</Button>
 					</div>
 				</div>
+			</div>
+			<div
+				className={` justify-center flex-col items-center gap-2 ${
+					tokens ? 'flex' : 'hidden'
+				}`}
+			>
+				<Cards />
 			</div>
 			<style>{`
 				@keyframes fadeInUp {
