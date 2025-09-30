@@ -202,6 +202,8 @@ const Login = () => {
 						{/* Foydalanuvchi yozadigan qismi */}
 						<input
 							type='tel'
+							inputMode='numeric'
+							pattern='[0-9]*'
 							placeholder='(90)-123-45-67'
 							value={formatPhone(rawPhone)}
 							onChange={handleChange}
@@ -224,7 +226,9 @@ const Login = () => {
 						{values.map((val, i) => (
 							<input
 								key={i}
-								type='text'
+								type='tel'
+								inputMode='numeric'
+								pattern='[0-9]*'
 								maxLength='1'
 								value={val}
 								onChange={e => handleChanges(e, i)}

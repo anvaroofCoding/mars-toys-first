@@ -1,6 +1,6 @@
 import { EyeFilled, ShoppingCartOutlined } from '@ant-design/icons'
 import { Button, Empty, Image, Input, Pagination, Select } from 'antd'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/loading'
 import { useCategoriyesQuery, useProductsGetQuery } from '../services/api'
@@ -33,6 +33,11 @@ const Allproducts = () => {
 			return byCategory && bySearch
 		})
 	}, [data, category, searchText])
+
+	// 🔑 Qidiruv yoki kategoriya o'zgarganda paginationni reset qilish
+	useEffect(() => {
+		setCurrent(1)
+	}, [searchText, category])
 
 	if (isLoading || Loaders) {
 		return (
@@ -129,7 +134,7 @@ const Allproducts = () => {
 										type='primary'
 										icon={<ShoppingCartOutlined />}
 										className='w-full'
-										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+										size={window.innerWidth >= 768 ? 'middle' : 'small'}
 									>
 										Savatga qo'shish
 									</Button>
@@ -138,7 +143,7 @@ const Allproducts = () => {
 										color='volcano'
 										icon={<EyeFilled />}
 										className='w-full'
-										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+										size={window.innerWidth >= 768 ? 'middle' : 'small'}
 									>
 										Ko'rish
 									</Button>
@@ -148,7 +153,7 @@ const Allproducts = () => {
 										type='primary'
 										icon={<ShoppingCartOutlined />}
 										className='w-full'
-										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+										size={window.innerWidth >= 768 ? 'middle' : 'small'}
 									>
 										Savatga
 									</Button>
@@ -164,7 +169,7 @@ const Allproducts = () => {
 											padding:
 												window.innerWidth >= 768 ? '0px 0px' : '0px 10px',
 										}}
-										size={window.innerWidth >= 768 ? 'middle' : 'small'} // md breakpoint = 768px
+										size={window.innerWidth >= 768 ? 'middle' : 'small'}
 									></Button>
 								</div>
 							</div>
