@@ -1,6 +1,6 @@
 import { EyeFilled, ShoppingCartOutlined } from '@ant-design/icons'
 import { Button, Empty, Image, Input, Pagination, Select } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/loading'
 import { useCategoriyesQuery, useProductsGetQuery } from '../services/api'
@@ -13,31 +13,16 @@ const Allproducts = () => {
 	const [searchText, setSearchText] = useState('')
 	const navigate = useNavigate()
 
-	// API dan ma'lumotlar
-	const { data, isLoading } = useProductsGetQuery(current)
+	// API chaqirish
+	const { data, isLoading } = useProductsGetQuery({
+		page: current,
+		search: searchText,
+		category: category,
+	})
+
+	console.log(current, searchText, category)
+
 	const { data: datas, isLoading: Loaders } = useCategoriyesQuery()
-	const categories = useMemo(() => {
-		if (!datas) return ['all']
-		const cats = datas?.map(item => item.name)
-		return ['all', ...new Set(cats)]
-	}, [datas])
-
-	// Filter va search qilingan mahsulotlar
-	const filteredProducts = useMemo(() => {
-		if (!data?.results) return []
-		return data?.results?.filter(item => {
-			const byCategory = category === 'all' ? true : item.category === category
-			const bySearch = item.name
-				.toLowerCase()
-				.includes(searchText.toLowerCase())
-			return byCategory && bySearch
-		})
-	}, [data, category, searchText])
-
-	// 🔑 Qidiruv yoki kategoriya o'zgarganda paginationni reset qilish
-	useEffect(() => {
-		setCurrent(1)
-	}, [searchText, category])
 
 	if (isLoading || Loaders) {
 		return (
@@ -47,14 +32,10 @@ const Allproducts = () => {
 		)
 	}
 
-	// Pagination uchun limit
-	const limit = data?.count + 10
-
+	// Pagination o‘zgarishi
 	const onChange = page => {
 		setCurrent(page)
 	}
-
-	// Barcha kategoriyalarni olish
 
 	return (
 		<div className='w-full mx-auto h-auto py-10 px-5 pb-30'>
@@ -71,23 +52,38 @@ const Allproducts = () => {
 				<Search
 					placeholder='Mahsulot qidirish...'
 					allowClear
-					onSearch={value => setSearchText(value)}
-					onChange={e => setSearchText(e.target.value)}
+					onSearch={value => {
+						setSearchText(value)
+						setCurrent(1) // qidiruvda pagination reset
+					}}
+					onChange={e => {
+						setSearchText(e.target.value)
+						setCurrent(1)
+					}}
 					style={{ width: 300 }}
 					value={searchText}
 				/>
 				<Select
 					value={category}
 					style={{ width: 300 }}
-					onChange={value => setCategory(value)}
-					options={categories.map(cat => ({ label: cat, value: cat }))}
+					onChange={value => {
+						setCategory(value)
+						setCurrent(1) // kategoriya o‘zgarsa ham reset
+					}}
+					options={[
+						{ label: 'Barchasi', value: 'all' },
+						...(datas || []).map(cat => ({
+							label: cat.name,
+							value: cat.name,
+						})),
+					]}
 				/>
 			</div>
 
 			{/* Mahsulotlar grid */}
 			<div className='grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-2 gap-5 py-10'>
-				{filteredProducts?.length > 0 ? (
-					filteredProducts.map(item => (
+				{data?.results?.length > 0 ? (
+					data?.results?.map(item => (
 						<div
 							key={item?.id}
 							className='md:h-[500px] xl:h-[400px] h-[250px] rounded-lg flex flex-col items-center overflow-hidden shadow-lg shadow-gray-300'
@@ -109,19 +105,16 @@ const Allproducts = () => {
 									{item?.category}
 								</h2>
 								<h2 className='font-bold text-[11px] block md:hidden '>
-									{' '}
 									{item?.category?.length > 20
 										? item?.category?.substring(0, 20) + '...'
 										: item?.category}
 								</h2>
 								<p className='font-bold md:text-[16px] text-[10px] md:block hidden '>
-									{' '}
 									{item?.name?.length > 30
 										? item?.name?.substring(0, 30) + '...'
 										: item?.name}
 								</p>
 								<p className='font-bold  text-[10px] block md:hidden '>
-									{' '}
 									{item?.name?.length > 20
 										? item?.name?.substring(0, 20) + '...'
 										: item?.name}
@@ -144,6 +137,7 @@ const Allproducts = () => {
 										icon={<EyeFilled />}
 										className='w-full'
 										size={window.innerWidth >= 768 ? 'middle' : 'small'}
+										onClick={() => navigate(`/maxsulotlar-kabinet/${item.id}`)}
 									>
 										Ko'rish
 									</Button>
@@ -162,9 +156,7 @@ const Allproducts = () => {
 										color='volcano'
 										icon={<EyeFilled />}
 										className='w-full '
-										onClick={() => {
-											navigate(`/maxsulotlar-kabinet/${item.id}`)
-										}}
+										onClick={() => navigate(`/maxsulotlar-kabinet/${item.id}`)}
 										style={{
 											padding:
 												window.innerWidth >= 768 ? '0px 0px' : '0px 10px',
@@ -184,7 +176,7 @@ const Allproducts = () => {
 
 			{/* Pagination */}
 			<div className='text-center'>
-				<Pagination current={current} onChange={onChange} total={limit} />
+				<Pagination current={current} onChange={onChange} total={data?.count} />
 			</div>
 		</div>
 	)

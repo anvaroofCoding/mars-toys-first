@@ -212,9 +212,9 @@ const Login = () => {
 						/>
 					</div>
 					<Button
-						size='middle'
+						size='large'
 						type='primary'
-						className='mt-2 w-[300px]'
+						className='mt-3 w-[300px]'
 						onClick={SentNumber}
 						loading={load}
 					>
@@ -241,7 +241,7 @@ const Login = () => {
 					<div>
 						{/* Kod: {code} */}
 						<Button
-							size='middle'
+							size='large'
 							type='primary'
 							className='mt-2 w-[300px]'
 							onClick={Handlecode}
