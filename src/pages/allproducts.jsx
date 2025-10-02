@@ -1,17 +1,26 @@
-import { EyeFilled, ShoppingCartOutlined } from '@ant-design/icons'
+import {
+	CheckOutlined,
+	EyeFilled,
+	ShoppingCartOutlined,
+} from '@ant-design/icons'
 import { Button, Empty, Image, Input, Pagination, Select } from 'antd'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/loading'
 import { useCategoriyesQuery, useProductsGetQuery } from '../services/api'
+import { addProduct, removeProduct } from '../services/products'
 
 const { Search } = Input
 
 const Allproducts = () => {
 	const [current, setCurrent] = useState(1)
-	const [category, setCategory] = useState('all')
+	const [category, setCategory] = useState('')
 	const [searchText, setSearchText] = useState('')
 	const navigate = useNavigate()
+	const dispatch = useDispatch()
+	const items = useSelector(state => state.products.items)
+	console.log(items)
 
 	// API chaqirish
 	const { data, isLoading } = useProductsGetQuery({
@@ -35,6 +44,22 @@ const Allproducts = () => {
 	// Pagination o‘zgarishi
 	const onChange = page => {
 		setCurrent(page)
+	}
+
+	const handleAdd = id => {
+		const finded = data?.results?.find(item => {
+			return item.id == id
+		})
+		if (navigator.vibrate) {
+			navigator.vibrate(200) // 200ms vibratsiya
+		}
+		dispatch(addProduct(finded))
+	}
+	const handleProductsdeleteLocaleStorege = id => {
+		const dataProducts = items?.find(item => {
+			return item.id == id
+		})
+		dispatch(removeProduct(dataProducts.id))
 	}
 
 	return (
@@ -71,10 +96,10 @@ const Allproducts = () => {
 						setCurrent(1) // kategoriya o‘zgarsa ham reset
 					}}
 					options={[
-						{ label: 'Barchasi', value: 'all' },
+						{ label: 'Barchasi', value: '' },
 						...(datas || []).map(cat => ({
 							label: cat.name,
-							value: cat.name,
+							value: cat.id,
 						})),
 					]}
 				/>
@@ -105,16 +130,19 @@ const Allproducts = () => {
 									{item?.category}
 								</h2>
 								<h2 className='font-bold text-[11px] block md:hidden '>
+									{' '}
 									{item?.category?.length > 20
 										? item?.category?.substring(0, 20) + '...'
 										: item?.category}
 								</h2>
 								<p className='font-bold md:text-[16px] text-[10px] md:block hidden '>
+									{' '}
 									{item?.name?.length > 30
 										? item?.name?.substring(0, 30) + '...'
 										: item?.name}
 								</p>
 								<p className='font-bold  text-[10px] block md:hidden '>
+									{' '}
 									{item?.name?.length > 20
 										? item?.name?.substring(0, 20) + '...'
 										: item?.name}
@@ -123,14 +151,31 @@ const Allproducts = () => {
 									{item?.quantity} dona qoldi
 								</p>
 								<div className='w-full justify-center md:flex-row flex-col gap-2 items-center md:flex hidden'>
-									<Button
-										type='primary'
-										icon={<ShoppingCartOutlined />}
-										className='w-full'
-										size={window.innerWidth >= 768 ? 'middle' : 'small'}
-									>
-										Savatga qo'shish
-									</Button>
+									{items.some(p => p.id === item.id) ? (
+										<Button
+											variant='solid'
+											// disabled
+											color='green'
+											icon={<CheckOutlined />}
+											className='w-full'
+											onClick={() => {
+												handleProductsdeleteLocaleStorege(item.id)
+											}}
+										>
+											Qo‘shilgan
+										</Button>
+									) : (
+										<Button
+											type='primary'
+											icon={<ShoppingCartOutlined />}
+											className='w-full'
+											onClick={() => handleAdd(item.id)}
+											size={window.innerWidth >= 768 ? 'middle' : 'small'}
+										>
+											Savatga qo‘shish
+										</Button>
+									)}
+
 									<Button
 										variant='solid'
 										color='volcano'
@@ -139,23 +184,42 @@ const Allproducts = () => {
 										size={window.innerWidth >= 768 ? 'middle' : 'small'}
 										onClick={() => navigate(`/maxsulotlar-kabinet/${item.id}`)}
 									>
-										Ko'rish
+										Ko‘rish
 									</Button>
 								</div>
+								{/* mobile */}
 								<div className='w-full flex justify-end gap-2 items-center md:hidden'>
-									<Button
-										type='primary'
-										icon={<ShoppingCartOutlined />}
-										className='w-full'
-										size={window.innerWidth >= 768 ? 'middle' : 'small'}
-									>
-										Savatga
-									</Button>
+									{items.some(p => p.id === item.id) ? (
+										<Button
+											variant='solid'
+											size='small'
+											// disabled
+											color='green'
+											icon={<CheckOutlined />}
+											className='w-full'
+											onClick={() => {
+												handleProductsdeleteLocaleStorege(item.id)
+											}}
+										>
+											Qo‘shilgan
+										</Button>
+									) : (
+										<Button
+											type='primary'
+											icon={<ShoppingCartOutlined />}
+											className='w-full'
+											onClick={() => handleAdd(item.id)}
+											size={window.innerWidth >= 768 ? 'middle' : 'small'}
+										>
+											Savatga
+										</Button>
+									)}
+
 									<Button
 										variant='solid'
 										color='volcano'
 										icon={<EyeFilled />}
-										className='w-full '
+										className='w-full'
 										onClick={() => navigate(`/maxsulotlar-kabinet/${item.id}`)}
 										style={{
 											padding:

@@ -1,9 +1,11 @@
+import 'antd/dist/reset.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/integration/react'
 import App from './App'
-import { store } from './app/store'
+import { persistor, store } from './app/store'
 import Header from './components/header'
 import './index.css'
 import Allproducts from './pages/allproducts'
@@ -14,20 +16,22 @@ import ProductsDetail from './pages/productsDetail'
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
 		<Provider store={store}>
-			<BrowserRouter>
-				<Routes>
-					<Route path='/' element={<App />}>
-						<Route path='/' element={<Header />} />
-						<Route path='/barcha-maxsulotlar' element={<Allproducts />} />
-						<Route path='/buyurtmalar' element={<Order />} />
-						<Route path='/shaxsiy-kabinet' element={<Login />} />
-						<Route
-							path='/maxsulotlar-kabinet/:id'
-							element={<ProductsDetail />}
-						/>
-					</Route>
-				</Routes>
-			</BrowserRouter>
+			<PersistGate loading={null} persistor={persistor}>
+				<BrowserRouter>
+					<Routes>
+						<Route path='/' element={<App />}>
+							<Route path='/' element={<Header />} />
+							<Route path='/barcha-maxsulotlar' element={<Allproducts />} />
+							<Route path='/buyurtmalar' element={<Order />} />
+							<Route path='/shaxsiy-kabinet' element={<Login />} />
+							<Route
+								path='/maxsulotlar-kabinet/:id'
+								element={<ProductsDetail />}
+							/>
+						</Route>
+					</Routes>
+				</BrowserRouter>
+			</PersistGate>
 		</Provider>
 	</StrictMode>
 )

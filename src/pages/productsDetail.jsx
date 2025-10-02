@@ -18,6 +18,7 @@ const ProductsDetail = () => {
 	}
 
 	if (!data) return <p>Mahsulot topilmadi</p>
+	console.log(data)
 
 	const { name, category, description, price, discounted_price, images } = data
 

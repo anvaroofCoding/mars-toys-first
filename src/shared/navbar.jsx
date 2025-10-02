@@ -1,8 +1,10 @@
 import { House, ListOrdered, Settings, ShoppingCart, User } from 'lucide-react'
+import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 
 const Navbar = () => {
 	const params = useLocation()
+	const items = useSelector(state => state.products.items)
 
 	// Masalan, buyurtmalar soni:
 	const orderCount = 3
@@ -52,7 +54,7 @@ const Navbar = () => {
 							{item.icon}
 							{item.badge && (
 								<span className='absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full'>
-									{item.badge}
+									{items?.length}
 								</span>
 							)}
 						</div>

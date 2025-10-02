@@ -26,18 +26,8 @@ export const api = createApi({
 			invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
 		}),
 		ProductsGet: builder.query({
-			query: ({ page = 1, search = '', category = '' }) => {
-				let url = `/shop/products/?limit=12&page=${page}`
-
-				if (search && search.trim() !== '') {
-					url += `&search=${search}`
-				}
-				if (category && category !== '' && category !== 'all') {
-					url += `&category=${category}`
-				}
-
-				return url
-			},
+			query: ({ page = 1, search = '', category = '' }) =>
+				`/shop/products/?limit=12&page=${page}&category_id=${category}&search=${search}`,
 		}),
 		addLogin: builder.mutation({
 			query: fullPhone => ({
