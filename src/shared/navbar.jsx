@@ -1,4 +1,4 @@
-import { House, ListOrdered, Settings, ShoppingCart, User } from 'lucide-react'
+import { House, ListOrdered, Search, ShoppingCart, User } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -21,16 +21,17 @@ const Navbar = () => {
 			link: '/barcha-maxsulotlar',
 		},
 		{
+			name: 'Kategoriyalar',
+			icon: <Search className='w-6 h-6' />,
+			link: '/sozlamalar',
+		},
+		{
 			name: 'Buyurtmalar',
 			icon: <ShoppingCart className='w-6 h-6' />,
 			link: '/buyurtmalar',
 			badge: orderCount,
 		},
-		{
-			name: 'Sozlamalar',
-			icon: <Settings className='w-6 h-6' />,
-			link: '/sozlamalar',
-		},
+
 		{
 			name: 'Profil',
 			icon: <User className='w-6 h-6' />,

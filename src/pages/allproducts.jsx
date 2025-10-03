@@ -47,14 +47,36 @@ const Allproducts = () => {
 	}
 
 	const handleAdd = id => {
-		const finded = data?.results?.find(item => {
-			return item.id == id
-		})
+		const finded = data?.results?.find(item => item.id == id)
+
+		if (!finded) return
+
+		// Vibratsiya (faqat telefonlarda ishlaydi)
 		if (navigator.vibrate) {
-			navigator.vibrate(200) // 200ms vibratsiya
+			navigator.vibrate(200)
 		}
-		dispatch(addProduct(finded))
+
+		// Productni kerakli fieldlar bilan tayyorlab olish
+		const productToSave = {
+			id: finded.id,
+			name: finded.name,
+			description: finded.description,
+			price: finded.price,
+			discount: finded.discount,
+			discounted_price: finded.discounted_price,
+			category: finded.category,
+			average_rating: finded.average_rating,
+			sold_count: finded.sold_count,
+			video_url: finded.video_url,
+			// faqat 1chi rasm
+			image: finded.images?.[0],
+			// doimiy quantity = 1
+			quantity: 1,
+		}
+
+		dispatch(addProduct(productToSave))
 	}
+
 	const handleProductsdeleteLocaleStorege = id => {
 		const dataProducts = items?.find(item => {
 			return item.id == id
